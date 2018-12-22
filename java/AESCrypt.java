@@ -9,7 +9,8 @@ public class AESCrypt {
     private static final String key = "aesEncryptionKey";
     private static final String initVector = "encryptionIntVec";
 
-    public static String encrypt(String value) {
+    // String plaintext -> Base64-encoded String ciphertext
+    public static String encrypt(String plaintext) {
         try {
             IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
@@ -17,24 +18,32 @@ public class AESCrypt {
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
 
-            byte[] encrypted = cipher.doFinal(value.getBytes());
-            return Base64.getEncoder().encodeToString(encrypted);
+            // Encode the plaintext as array of Bytes
+            byte[] cipherbytes = cipher.doFinal(plaintext.getBytes());
+
+            // Return the cipherbytes as a Base64-encoded string
+            return Base64.getEncoder().encodeToString(cipherbytes);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
         return null;
     }
 
-    public static String decrypt(String encrypted) {
+    // Base64-encoded String ciphertext -> String plaintext
+    public static String decrypt(String ciphertext) {
         try {
             IvParameterSpec iv = new IvParameterSpec(initVector.getBytes("UTF-8"));
             SecretKeySpec skeySpec = new SecretKeySpec(key.getBytes("UTF-8"), "AES");
 
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
             cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
-            byte[] original = cipher.doFinal(Base64.getDecoder().decode(encrypted));
 
-            return new String(original);
+            // Convert the ciphertext Base64-encoded String back to bytes, and
+            // then decrypt
+            byte[] plaintext = cipher.doFinal(Base64.getDecoder().decode(ciphertext));
+
+            // Return plaintext as String
+            return new String(plaintext);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -44,8 +53,8 @@ public class AESCrypt {
 
     public static void main(String[] args) {
         // Prints "Hello, World" to the terminal window.
-        System.out.println("Hello, World");
-        String originalString = "password";
+        System.out.println("Java String -> Encrypted (Base64 encoded) -> Decrypted to original String");
+        String originalString = "The quick brown fox jumps over the lâzy dতg";
         System.out.println("Original String to encrypt - " + originalString);
         String encryptedString = encrypt(originalString);
         System.out.println("Encrypted String - " + encryptedString);
