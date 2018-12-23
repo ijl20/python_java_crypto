@@ -19,11 +19,7 @@ def pad(byte_array):
     print("pad length byte_array {0}".format(len(byte_array)))
     pad_len = BS - len(byte_array) % BS
 
-    pad_chr = chr(pad_len)
-
-    pad_str = pad_len * pad_chr
-
-    return byte_array + bytes(pad_str.encode('utf-8'))
+    return byte_array + (bytes([pad_len]) * pad_len)
 
 def unpad(byte_array):
     last_byte = byte_array[-1]
@@ -34,20 +30,20 @@ def encrypt(s):
     Returns hex encoded encrypted value!
     """
 
-    print("encrypt input length {0} chars".format(len(s)))
+    print("encrypt {0} chars".format(len(s)))
 
-    raw = bytes(s.encode('utf-8'))
+    raw = s.encode('utf-8') # string to bytes
 
-    print("encrypt input length {0} bytes".format(len(raw)))
-    print("encrypt key length {0} bytes".format(len(key)))
+    print("encrypt {0} bytes".format(len(raw)))
+    print("encrypt key {0} bytes".format(len(key)))
 
-    raw = pad(raw)
+    padded = pad(raw)
 
-    print("encrypt padded length {0} bytes".format(len(raw)))
+    print("encrypt padded {0} length {1} bytes".format(padded,len(padded)))
 
     #iv = Random.new().read(AES.block_size);
     cipher = AES.new( key, AES.MODE_CBC, iv )
-    encrypted = cipher.encrypt(raw)
+    encrypted = cipher.encrypt(padded)
     return encrypted
 
 def decrypt( enc ):
