@@ -4,6 +4,7 @@ import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 import java.util.Base64;
+import java.nio.charset.StandardCharsets;
 
 public class AESCrypt {
     private static final String key = "aesEncryptionKey";
@@ -40,10 +41,10 @@ public class AESCrypt {
 
             // Convert the ciphertext Base64-encoded String back to bytes, and
             // then decrypt
-            byte[] plaintext = cipher.doFinal(Base64.getDecoder().decode(ciphertext));
+            byte[] byte_array = cipher.doFinal(Base64.getDecoder().decode(ciphertext));
 
             // Return plaintext as String
-            return new String(plaintext);
+            return new String(byte_array, StandardCharsets.UTF_8);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
