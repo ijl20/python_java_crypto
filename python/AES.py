@@ -4,9 +4,10 @@ import base64
 
 BS = 16
 #pad = lambda s: s + (BS - len(s) % BS) * chr(BS - len(s) % BS)
-unpad = lambda s : s[0:-ord(s[-1])]
+#unpad = lambda s : s[0:-ord(s[-1])]
 
 plaintext = "The quick brown fox jumps over the lâzy dতg";
+#plaintext = "1234567890ABCDEF"
 
 key = "aesEncryptionKey".encode()
 iv =  "encryptionIntVec".encode()
@@ -23,6 +24,10 @@ def pad(byte_array):
     pad_str = pad_len * pad_chr
 
     return byte_array + bytes(pad_str.encode('utf-8'))
+
+def unpad(byte_array):
+    last_byte = byte_array[-1]
+    return byte_array[0:-last_byte]
 
 def encrypt(s):
     """
@@ -49,24 +54,24 @@ def decrypt( enc ):
     """
     Requires hex encoded param to decrypt
     """
-    enc = enc.decode("hex")
-    iv = enc[:16]
-    enc= enc[16:]
+    #enc = enc.decode("hex")
+    #iv = enc[:16]
+    #enc= enc[16:]
     cipher = AES.new(key, AES.MODE_CBC, iv )
-    return unpad(cipher.decrypt( enc))
 
-#    key = "140b41b22a29beb4061bda66b6747e14"
-#    ciphertext = "4ca00ff4c898d61e1edbf1800618fb2828a226d160dad07883d04e008a7897ee2e4b7465d5290d0c0e6c6822236e1daafb94ffe0c5da05d9476be028ad7c1d81";
-#    key=key[:32]
-#    decryptor = AESCipher(key)
-#    plaintext = decryptor.decrypt(ciphertext)
-#    print "%s" % plaintext
+    decrypted_padded = cipher.decrypt(enc)
+
+    decrypted = unpad(decrypted_padded)
+
+    return decrypted
 
 print("plaintext {0}".format(plaintext))
 
-enc = encrypt(plaintext)
+encrypted = encrypt(plaintext)
 
-print("encrypted {0}".format(base64.b64encode(enc)))
+print("encrypted {0}".format(base64.b64encode(encrypted)))
 
-dec = decrypt
+decrypted = decrypt(encrypted)
+
+print("decrypted {0}".format(decrypted.decode('utf-8')))
 

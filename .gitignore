@@ -123,3 +123,6 @@ ENV/
 *.sqlite3
 secrets.py
 
+# Editor detritus
+*.swp
+
