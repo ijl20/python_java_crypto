@@ -67,3 +67,26 @@ Python3 has `String.encode('UTF-8')` for String->bytes, and `base64.b64encode(by
 
 Java has `String.getBytes("UTF-8")` and `new String(byte_array, StandardCharsets.UTF_8)`.
 
+## `run.sh`
+
+Both sample programs include `encrypt(key, message)` and `decrypt(key, message)` functions, where
+both arguments are native (python and java) Strings and both systems are using the default "UTF-8"
+character encoding.
+
+Both programs assume THREE arguments on the command line:
+
+1. `encrypt`|`decrypt`, to tell the program whether to encrypt or decrypt the message
+2. `key`, which must be 16 bytes long, e.g. "ThisIsA16ByteKey"
+3. `message`, the plaintext or encrypted message to be encrypted or unencrypted
+
+Both programs print the encrypted or decrypted result to standard output.
+
+`run.sh` is a simple script that provides a sample key and sentence of plaintext, and calls Python to encrypt that
+message, passing the result to Java to decrypt it, and then using Java to encrypt the message and Python to
+decrypt it, printing the results to the console as it proceeds.
+
+You can run the script via:
+```
+./run.sh
+```
+
